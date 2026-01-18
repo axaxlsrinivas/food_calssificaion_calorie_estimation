@@ -1,0 +1,5 @@
+{
+    "dotnet.maui.androidSdk": "/Users/cr63494/Library/Developer/Xamarin/android-sdk-macosx",
+    "dotnet.maui.javaHome": "/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home",
+    "java.jdt.ls.java.home": "/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home"
+}
