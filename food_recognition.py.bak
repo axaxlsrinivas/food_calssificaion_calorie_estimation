@@ -1,0 +1,328 @@
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+from PIL import Image
+import logging
+from typing import Dict, List, Tuple
+import json
+import os
+import io
+
+logger = logging.getLogger(__name__)
+
+# Try to import Clarifai for better accuracy
+try:
+    from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
+    from clarifai_grpc.grpc.api import resources_pb2, service_pb2, service_pb2_grpc
+    Now includes Clarifai integration for accurate predictions
+    """
+    
+    def __init__(self, model_path: str = "models/food_model.h5", use_clarifai: bool = True):
+        self.model_path = model_path
+        self.model = None
+        self.class_names = []
+        self.img_height = 224
+        self.img_width = 224
+        self.use_clarifai = use_clarifai and CLARIFAI_AVAILABLE
+        
+        # Setup Clarifai if available
+        self.clarifai_client = None
+        if self.use_clarifai:
+            self._setup_clarifai()
+    """
+    Food recognition model using deep learning
+    Supports both pre-trained models and custom training
+    """
+    
+    def __init__(self, model_path: str = "models/food_model.h5"):
+        self.model_path = model_path
+        self.model = None
+        self.class_names = []
+        self.img_height = 224
+        self.img_width = 224
+        
+        # Load class names
+        self._load_class_names()
+    
+    def _load_class_names(self):
+        """Load food class names from file or use default"""
+        class_names_path = "models/class_names.json"
+        
+        if os.path.exists(class_names_path):
+            with open(class_names_path, 'r') as f:
+        _setup_clarifai(self):
+        """Setup Clarifai client for accurate predictions"""
+        try:
+            api_key = os.getenv('CLARIFAI_API_KEY', '1301a1be46094763a888f4f5eb73182d')
+            
+            if not api_key:
+                logger.warning("CLARIFAI_API_KEY not set. Using local model.")
+                self.use_clarifai = False
+                return
+            
+            # Setup Clarifai channel
+            channel = ClarifaiChannel.get_grpc_channel()
+            self.clarifai_stub = service_pb2_grpc.V2Stub(channel)
+            self.clarifai_metadata = (('authorization', f'Key {api_key}'),)
+            
+            # Use Clarifai's food model
+            self.clarifai_model_id = "food-item-recognition"
+            self.clarifai_version_id = "1d5fd481e0cf4826aa72ec3ff049e044"
+            
+            logger.info("✓ Clarifai food recognition enabled (accurate predictions)")
+            
+        except Exception as e:
+            logger.warning(f"Failed to setup Clarifai: {e}. Using local model.")
+            self.use_clarifai = False
+    
+    def         self.class_names = json.load(f)
+        else:
+            # Default food classes (expand this list)
+            self.class_names = [
+                "Apple", "Banana", "Bread", "Burger", "Cake",
+                "Chicken", "Coffee", "Cookie", "Donut", "Egg",
+                "French Fries", "Grape", "Hot Dog", "Ice Cream", "Orange",
+                "Pancake", "Pizza", "Rice", "Salad", "Sandwich",
+                "Spaghetti", "Steak", "Strawberry", "Sushi", "Taco"
+            ]
+            
+            # Save class names
+            os.makedirs("models", exist_ok=True)
+            with open(class_names_path, 'w') as f:
+                json.dump(self.class_names, f)
+        
+        logger.info(f"Loaded {len(self.class_names)} food classes")
+    
+    def load_model(self):
+        """Load pre-trained model or create new one"""
+        try:
+            if os.path.exists(self.model_path):
+                self.model = keras.models.load_model(self.model_path)
+                logger.info(f"Loaded existing model from {self.model_path}")
+            else:
+                logger.warning("No pre-trained model found. Creating new model...")
+                self._create_model()
+                logger.info("Created new model (needs training)")
+        except Exception as e:
+            logger.error(f"Error loading model: {str(e)}")
+            self._create_model()
+    
+    def _create_model(self):
+        """
+        Create a new CNN model using transfer learning with MobileNetV2
+        This is a lightweight model suitable for food recognition
+        """
+        # Load MobileNetV2 pre-trained on ImageNet
+        base_model = keras.applications.MobileNetV2(
+            input_shape=(self.img_height, self.img_width, 3),
+            include_top=False,
+            weights='imagenet'
+        )
+        
+        # Freeze base model
+        base_model.trainable = False
+        
+        # Create new model
+        self.model = keras.Sequential([
+            base_model,
+            keras.layers.GlobalAveragePooling2D(),
+            keras.layers.Dense(256, activation='relu'),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(len(self.class_names), activation='softmax')
+        ])
+        _predict_with_clarifai(self, image: Image.Image, top_k: int = 5) -> Dict:
+        """
+        Use Clarifai API for accurate food recognition
+        
+        Args:
+            image: PIL Image
+            top_k: Number of predictions to return
+            
+        Returns:
+            Dictionary with prediction results
+        """
+        try:
+            # Convert image to bytes
+            img_byte_arr = io.BytesIO()
+            image.save(img_byte_arr, format='JPEG')
+            img_byte_arr = img_byte_arr.getvalue()
+            
+            # Make prediction request
+            request = service_pb2.PostModelOutputsRequest(
+                model_id=self.clarifai_model_id,
+                version_id=self.clarifai_version_id,
+                inputs=[
+                    resources_pb2.Input(
+                        data=resources_pb2.Data(
+                            image=resources_pb2.Image(
+                                base64=img_byte_arr
+                            )
+                        )
+                    )
+                ]
+            )
+            
+            response = self.clarifai_stub.PostModelOutputs(request, metadata=self.clarifai_metadata)
+            
+            if response.status.code != status_code_pb2.SUCCESS:
+                logger.warning(f"Clarifai error: {response.status.description}. Falling back to local model.")
+                return self._predict_with_local_model(image, top_k)
+            
+            # Parse results
+            concepts = response.outputs[0].data.concepts
+            
+            # Get top predictions
+            top_predictions = [
+                {
+                    "food_name": concept.name.title(),
+                    "confidence": float(concept.value)
+                }
+                for concept in concepts[:top_k]
+            ]
+            
+            if not top_predictions:
+                return self._predict_with_local_model(image, top_k)
+            
+            return {
+                "food_name": top_predictions[0]['food_name'],
+                "confidence": top_predictions[0]['confidence'],
+                "top_predictions": top_predictions
+            }
+            
+        except Exception as e:
+            logger.error(f"Clarifai prediction error: {e}. Using local model.")
+            return self._predict_with_local_model(image, top_k)
+    
+    def _predict_with_local_model(self, image: Image.Image, top_k: int = 5) -> Dict:
+        """
+        Use local TensorFlow model for prediction
+        
+        Args:
+            image: PIL Image object
+            top_k: Number of top predictions to return
+            
+        Returns:
+            Dictionary with prediction results
+        """
+        if self.model is None:
+            raise ValueError("Model not loaded. Call load_model() first.")
+        
+        # Preprocess image
+        processed_image = self.preprocess_image(image)
+        
+        # Make prediction
+        predictions = self.model.predict(processed_image, verbose=0)
+        
+        # Get top predictions
+        top_indices = np.argsort(predictions[0])[-top_k:][::-1]
+        
+        top_predictions = [
+            {
+                "food_name": self.class_names[idx],
+                "confidence": float(predictions[0][idx])
+            }
+            for idx in top_indices
+        ]
+        
+        # Get best prediction
+        best_idx = top_indices[0]
+        
+        return {
+            "food_name": self.class_names[best_idx],
+            "confidence": float(predictions[0][best_idx]),
+            "top_predictions": top_predictions
+        }
+    
+    def predict(self, image: Image.Image, top_k: int = 5) -> Dict:
+        """
+        Predict food type from image
+        Uses Clarifai for accurate predictions if available, falls back to local model
+        
+        Args:
+            image: PIL Image object
+            top_k: Number of top predictions to return
+            
+        Returns:
+            Dictionary with prediction results
+        """
+        # Use Clarifai if available (more accurate)
+        if self.use_clarifai and self.clarifai_stub:
+            return self._predict_with_clarifai(image, top_k)
+        
+        # Fall back to local model
+        return self._predict_with_local_model(image, top_k)   top_k: Number of top predictions to return
+            
+        Returns:
+            Dictionary with prediction results
+        """
+        if self.model is None:
+            raise ValueError("Model not loaded. Call load_model() first.")
+        
+        # Preprocess image
+        processed_image = self.preprocess_image(image)
+        
+        # Make prediction
+        predictions = self.model.predict(processed_image, verbose=0)
+        
+        # Get top predictions
+        top_indices = np.argsort(predictions[0])[-top_k:][::-1]
+        
+        top_predictions = [
+            {
+                "food_name": self.class_names[idx],
+                "confidence": float(predictions[0][idx])
+            }
+            for idx in top_indices
+        ]
+        
+        # Get best prediction
+        best_idx = top_indices[0]
+        
+        return {
+            "food_name": self.class_names[best_idx],
+            "confidence": float(predictions[0][best_idx]),
+            "top_predictions": top_predictions
+        }
+    
+    def train(self, train_dataset, validation_dataset, epochs: int = 10):
+        """
+        Train the model on custom dataset
+        
+        Args:
+            train_dataset: Training dataset
+            validation_dataset: Validation dataset
+            epochs: Number of training epochs
+        """
+        if self.model is None:
+            self._create_model()
+        
+        # Define callbacks
+        callbacks = [
+            keras.callbacks.EarlyStopping(
+                monitor='val_loss',
+                patience=3,
+                restore_best_weights=True
+            ),
+            keras.callbacks.ModelCheckpoint(
+                filepath=self.model_path,
+                monitor='val_accuracy',
+                save_best_only=True
+            ),
+            keras.callbacks.ReduceLROnPlateau(
+                monitor='val_loss',
+                factor=0.2,
+                patience=2
+            )
+        ]
+        
+        # Train model
+        history = self.model.fit(
+            train_dataset,
+            validation_data=validation_dataset,
+            epochs=epochs,
+            callbacks=callbacks
+        )
+        
+        logger.info("Model training completed")
+        
+        return history

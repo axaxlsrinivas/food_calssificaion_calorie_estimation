@@ -1,0 +1,227 @@
+{
+  "Apple": {
+    "calories": 95,
+    "serving_size": "1 medium (182g)",
+    "protein": 0.5,
+    "carbs": 25,
+    "fat": 0.3,
+    "fiber": 4.4,
+    "sugar": 19
+  },
+  "Banana": {
+    "calories": 105,
+    "serving_size": "1 medium (118g)",
+    "protein": 1.3,
+    "carbs": 27,
+    "fat": 0.4,
+    "fiber": 3.1,
+    "sugar": 14
+  },
+  "Bread": {
+    "calories": 79,
+    "serving_size": "1 slice (28g)",
+    "protein": 2.7,
+    "carbs": 15,
+    "fat": 1,
+    "fiber": 0.8,
+    "sugar": 1.5
+  },
+  "Burger": {
+    "calories": 354,
+    "serving_size": "1 burger (143g)",
+    "protein": 21,
+    "carbs": 30,
+    "fat": 16,
+    "fiber": 1.5,
+    "sugar": 5
+  },
+  "Cake": {
+    "calories": 257,
+    "serving_size": "1 slice (80g)",
+    "protein": 3,
+    "carbs": 38,
+    "fat": 10,
+    "fiber": 0.6,
+    "sugar": 24
+  },
+  "Chicken": {
+    "calories": 165,
+    "serving_size": "100g (cooked)",
+    "protein": 31,
+    "carbs": 0,
+    "fat": 3.6,
+    "fiber": 0,
+    "sugar": 0
+  },
+  "Coffee": {
+    "calories": 2,
+    "serving_size": "1 cup (240ml)",
+    "protein": 0.3,
+    "carbs": 0,
+    "fat": 0,
+    "fiber": 0,
+    "sugar": 0
+  },
+  "Cookie": {
+    "calories": 49,
+    "serving_size": "1 cookie (10g)",
+    "protein": 0.5,
+    "carbs": 6.6,
+    "fat": 2.3,
+    "fiber": 0.2,
+    "sugar": 3.5
+  },
+  "Donut": {
+    "calories": 269,
+    "serving_size": "1 donut (66g)",
+    "protein": 3.1,
+    "carbs": 31,
+    "fat": 15,
+    "fiber": 0.9,
+    "sugar": 12
+  },
+  "Egg": {
+    "calories": 78,
+    "serving_size": "1 large egg (50g)",
+    "protein": 6.3,
+    "carbs": 0.6,
+    "fat": 5.3,
+    "fiber": 0,
+    "sugar": 0.6
+  },
+  "French Fries": {
+    "calories": 312,
+    "serving_size": "100g",
+    "protein": 3.4,
+    "carbs": 41,
+    "fat": 15,
+    "fiber": 3.8,
+    "sugar": 0.3
+  },
+  "Grape": {
+    "calories": 69,
+    "serving_size": "1 cup (151g)",
+    "protein": 0.7,
+    "carbs": 18,
+    "fat": 0.2,
+    "fiber": 0.9,
+    "sugar": 15
+  },
+  "Hot Dog": {
+    "calories": 151,
+    "serving_size": "1 hot dog (45g)",
+    "protein": 5.1,
+    "carbs": 2,
+    "fat": 13,
+    "fiber": 0,
+    "sugar": 1
+  },
+  "Ice Cream": {
+    "calories": 207,
+    "serving_size": "1 cup (132g)",
+    "protein": 3.5,
+    "carbs": 24,
+    "fat": 11,
+    "fiber": 0.7,
+    "sugar": 21
+  },
+  "Orange": {
+    "calories": 62,
+    "serving_size": "1 medium (131g)",
+    "protein": 1.2,
+    "carbs": 15,
+    "fat": 0.2,
+    "fiber": 3.1,
+    "sugar": 12
+  },
+  "Pancake": {
+    "calories": 86,
+    "serving_size": "1 pancake (38g)",
+    "protein": 2.4,
+    "carbs": 11,
+    "fat": 3.5,
+    "fiber": 0.5,
+    "sugar": 2
+  },
+  "Pizza": {
+    "calories": 285,
+    "serving_size": "1 slice (107g)",
+    "protein": 12,
+    "carbs": 36,
+    "fat": 10,
+    "fiber": 2.5,
+    "sugar": 4
+  },
+  "Rice": {
+    "calories": 130,
+    "serving_size": "1 cup cooked (158g)",
+    "protein": 2.7,
+    "carbs": 28,
+    "fat": 0.3,
+    "fiber": 0.4,
+    "sugar": 0.1
+  },
+  "Salad": {
+    "calories": 33,
+    "serving_size": "1 cup (47g)",
+    "protein": 1.2,
+    "carbs": 6.3,
+    "fat": 0.2,
+    "fiber": 2.1,
+    "sugar": 2.4
+  },
+  "Sandwich": {
+    "calories": 304,
+    "serving_size": "1 sandwich (146g)",
+    "protein": 13,
+    "carbs": 39,
+    "fat": 10,
+    "fiber": 4,
+    "sugar": 6
+  },
+  "Spaghetti": {
+    "calories": 221,
+    "serving_size": "1 cup cooked (140g)",
+    "protein": 8.1,
+    "carbs": 43,
+    "fat": 1.3,
+    "fiber": 2.5,
+    "sugar": 0.8
+  },
+  "Steak": {
+    "calories": 271,
+    "serving_size": "100g (cooked)",
+    "protein": 25,
+    "carbs": 0,
+    "fat": 19,
+    "fiber": 0,
+    "sugar": 0
+  },
+  "Strawberry": {
+    "calories": 49,
+    "serving_size": "1 cup (152g)",
+    "protein": 1,
+    "carbs": 12,
+    "fat": 0.5,
+    "fiber": 3,
+    "sugar": 7.4
+  },
+  "Sushi": {
+    "calories": 145,
+    "serving_size": "1 roll (6 pieces)",
+    "protein": 6,
+    "carbs": 24,
+    "fat": 3.7,
+    "fiber": 3.5,
+    "sugar": 3
+  },
+  "Taco": {
+    "calories": 226,
+    "serving_size": "1 taco (102g)",
+    "protein": 10,
+    "carbs": 20,
+    "fat": 12,
+    "fiber": 3.2,
+    "sugar": 1.8
+  }
+}
